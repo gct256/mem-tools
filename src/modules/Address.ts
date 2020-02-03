@@ -1,22 +1,17 @@
 import { formatters } from './formatters';
-
-/* eslint-disable no-underscore-dangle */
-const __FIRST__ = '__FIRST__';
-const __LAST__ = '__LAST__';
-const __NEXT__ = '__NEXT__';
-const __SIZE__ = '__SIZE__';
-/* eslint-enable */
+import { Work, createWork } from './Work';
+import { OffsetData, Offset } from './Offset';
 
 /** Object interface for named address. */
 export type AddressData = {
   /** Name for address. */
   readonly name: string;
-  /** Address. (== baseAddress + addressOffset) */
+  /** Address. (== baseAddress + addressOffset.offset) */
   readonly address: number;
   /** Base address. */
   readonly baseAddress: number;
   /** Offset for address. */
-  readonly addressOffset: number;
+  readonly addressOffset: OffsetData;
   /** Anonymous (no named) flag. */
   readonly anonymous: boolean;
 };
@@ -26,7 +21,7 @@ export class Address implements AddressData {
   public readonly name: string;
   public readonly address: number;
   public readonly baseAddress: number;
-  public readonly addressOffset: number;
+  public readonly addressOffset: Offset;
   public readonly anonymous: boolean;
 
   /**
@@ -39,7 +34,7 @@ export class Address implements AddressData {
   public constructor(
     name: string | undefined,
     baseAddress: number | AddressData,
-    addressOffset: number | AddressData = 0,
+    addressOffset: number | OffsetData = 0,
   ) {
     if (typeof baseAddress === 'number') {
       this.baseAddress = baseAddress & 0xffff;
@@ -48,12 +43,15 @@ export class Address implements AddressData {
     }
 
     if (typeof addressOffset === 'number') {
-      this.addressOffset = Number.isFinite(addressOffset) ? addressOffset : 0;
+      this.addressOffset = new Offset(
+        undefined,
+        Number.isFinite(addressOffset) ? addressOffset : 0,
+      );
     } else {
-      this.addressOffset = addressOffset.address;
+      this.addressOffset = Offset.of(addressOffset);
     }
 
-    this.address = (this.baseAddress + this.addressOffset) & 0xffff;
+    this.address = (this.baseAddress + this.addressOffset.offset) & 0xffff;
 
     if (name === undefined) {
       this.name = `<anonymous ${formatters.hex16(this.address)}>`;
@@ -68,16 +66,24 @@ export class Address implements AddressData {
    * Return formatted string of address.
    */
   public format(delimiter = ' ; '): string {
-    if (this.addressOffset === 0) {
-      return `${formatters.hex16(this.address)}${delimiter}${this.name}`;
-    }
+    if (this.addressOffset.anonymous) {
+      if (this.addressOffset.offset === 0) {
+        return `${formatters.hex16(this.address)}${delimiter}${this.name}`;
+      }
 
-    const sign = this.addressOffset > 0 ? '+' : '-';
-    const o = formatters.hex16(Math.abs(this.addressOffset));
+      const sign = this.addressOffset.offset > 0 ? '+' : '-';
+      const o = formatters.hex16(Math.abs(this.addressOffset.offset));
+
+      return `${formatters.hex16(this.address)}${delimiter}${
+        this.name
+      } ${sign} ${o} (${formatters.hex16(this.baseAddress)} ${sign} ${o})`;
+    }
 
     return `${formatters.hex16(this.address)}${delimiter}${
       this.name
-    } ${sign} ${o} (${formatters.hex16(this.baseAddress)} ${sign} ${o})`;
+    } ${this.addressOffset.formatName()} (${formatters.hex16(
+      this.baseAddress,
+    )} ${this.addressOffset.formatOffset()})`;
   }
 
   /**
@@ -85,12 +91,18 @@ export class Address implements AddressData {
    *
    * @param addressOffset new offset.
    */
-  public offset(addressOffset: number | AddressData): Address {
-    if (typeof addressOffset !== 'number') {
-      return this.offset(addressOffset.address);
+  public offset(addressOffset: number | Offset): Address {
+    if (typeof addressOffset === 'number') {
+      return this.offset(new Offset(undefined, addressOffset));
     }
 
-    if (addressOffset === this.addressOffset) return this;
+    if (
+      addressOffset.offset === this.addressOffset.offset &&
+      addressOffset.name === this.addressOffset.name &&
+      addressOffset.anonymous === this.addressOffset.anonymous
+    ) {
+      return this;
+    }
 
     return new Address(this.name, this.baseAddress, addressOffset);
   }
@@ -145,16 +157,7 @@ export class Address implements AddressData {
   public static createWork<T extends { [key: string]: number }>(
     start: number | AddressData,
     values: T,
-  ): { [P in keyof T]: Address } & {
-    /** First address of work area. */
-    [__FIRST__]: Address;
-    /** Last address of work area. */
-    [__LAST__]: Address;
-    /** Next address of work area. */
-    [__NEXT__]: Address;
-    /** Size of work area. */
-    [__SIZE__]: number;
-  } {
+  ): { [P in keyof T]: Address } & Work<Address> {
     const s = typeof start === 'number' ? start : start.address;
 
     let offset = s;
@@ -172,10 +175,12 @@ export class Address implements AddressData {
 
     return {
       ...result,
-      [__FIRST__]: new Address(__FIRST__, s),
-      [__LAST__]: new Address(__LAST__, offset - 1),
-      [__NEXT__]: new Address(__NEXT__, offset),
-      [__SIZE__]: offset - s,
+      ...createWork(
+        (x) => new Address(x, s),
+        (x) => new Address(x, offset - 1),
+        (x) => new Address(x, offset),
+        offset - s,
+      ),
     };
   }
 }

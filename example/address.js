@@ -8,11 +8,17 @@ common.example('single address', () => {
 
 common.example('offset', () => {
   const FOO = new sim.Address('FOO', 0x1234);
+  const BAR = new sim.Offset('BAR', 0x12);
+  const BAZ = new sim.Offset('BAZ', -0x12);
+  const QUX = new sim.Offset('QUX', 0);
 
   common.log(
     FOO.offset(0x12).format(),
     FOO.offset(-0x12).format(),
     FOO.offset(0).format(),
+    FOO.offset(BAR).format(),
+    FOO.offset(BAZ).format(),
+    FOO.offset(QUX).format(),
   );
 });
 

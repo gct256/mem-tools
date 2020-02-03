@@ -8,6 +8,8 @@ const convert = (x) => {
 
   if (x instanceof sim.Address) return x.format();
 
+  if (x instanceof sim.Offset) return x.format();
+
   if (Array.isArray(x)) return x.map(convert);
 
   return Object.keys(x).reduce(

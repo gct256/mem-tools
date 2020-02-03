@@ -43,18 +43,18 @@ common.example('createDict', () => {
 });
 
 common.example('createWork', () => {
-  const WORK = sim.Address.createWork(0x1234, [
-    ['FOO', 2],
-    ['BAR', 1],
-    ['BAZ', 1],
-  ]);
+  const WORK = sim.Address.createWork(0x1234, {
+    FOO: 2,
+    BAR: 1,
+    BAZ: 1,
+  });
 
   common.log(
-    `Address.createWork(0x1234, [
-  ['FOO', 2],
-  ['BAR', 1],
-  ['BAZ', 1],
-])`,
+    `Address.createWork(0x1234, {
+  FOO: 2,
+  BAR: 1,
+  BAZ: 1,
+})`,
     '↓',
     WORK,
   );

@@ -140,28 +140,35 @@ export class Address implements AddressData {
    * - __SIZE__: count of work arae. (number)
    *
    * @param start start address.
-   * @param names Array of [name, size]
+   * @param values key and value.
    */
-  public static createWork<T extends string>(
+  public static createWork<T extends { [key: string]: number }>(
     start: number | AddressData,
-    names: [T, number][],
-  ): { [K in T]: Address } & {
+    values: T,
+  ): { [P in keyof T]: Address } & {
+    /** First address of work area. */
     [__FIRST__]: Address;
+    /** Last address of work area. */
     [__LAST__]: Address;
+    /** Next address of work area. */
     [__NEXT__]: Address;
+    /** Size of work area. */
     [__SIZE__]: number;
   } {
     const s = typeof start === 'number' ? start : start.address;
 
     let offset = s;
 
-    const result = names.reduce((prev, current) => {
-      // eslint-disable-next-line no-param-reassign
-      prev[current[0]] = new Address(current[0], offset);
-      offset += current[1];
+    const keys = Object.keys(values) as (keyof T)[];
+    const result: { [P in keyof T]: Address } = Object.create(null);
 
-      return prev;
-    }, Object.create(null));
+    keys.forEach((k) => {
+      const v = values[k] as number;
+
+      result[k] = new Address(k as string, offset);
+
+      offset += v;
+    });
 
     return {
       ...result,

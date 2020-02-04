@@ -14,7 +14,7 @@ const base = {
           declaration: isProduction,
           declarationDir: './types',
         },
-        include: ['./src/index.ts', './src/modules/Event.ts'],
+        include: ['./src/index.ts', './src/modules/MemoryListener.ts'],
         exclude: ['./node_modules/**/*.*'],
       },
       useTsconfigDeclarationDir: true,

@@ -35,21 +35,6 @@ export class Memory extends Emitter {
   }
 
   /**
-   * Add memo. no effect to memory.
-   *
-   * @param memo
-   */
-  public memo(memo: string): void {
-    this.emit(
-      {
-        type: 'MEMO',
-        memo,
-      },
-      this.getBuffer(),
-    );
-  }
-
-  /**
    * Read 1 byte as signed number.
    *
    * @param address
@@ -58,14 +43,7 @@ export class Memory extends Emitter {
     const addr = getAddress(address);
     const result = this.buffer.readInt8(addr.address);
 
-    this.emit(
-      {
-        type: 'READ_8',
-        address: addr,
-        result,
-      },
-      this.getBuffer(),
-    );
+    this.emitRead8(addr, result, this.getBuffer());
 
     return result;
   }
@@ -79,14 +57,7 @@ export class Memory extends Emitter {
     const addr = getAddress(address);
     const result = this.buffer.readUInt8(addr.address);
 
-    this.emit(
-      {
-        type: 'READ_8',
-        address: addr,
-        result,
-      },
-      this.getBuffer(),
-    );
+    this.emitRead8(addr, result, this.getBuffer());
 
     return result;
   }
@@ -100,14 +71,7 @@ export class Memory extends Emitter {
     const addr = getAddress(address);
     const result = this.buffer.readInt16LE(addr.address);
 
-    this.emit(
-      {
-        type: 'READ_16',
-        address: addr,
-        result,
-      },
-      this.getBuffer(),
-    );
+    this.emitRead16(addr, result, this.getBuffer());
 
     return result;
   }
@@ -121,14 +85,7 @@ export class Memory extends Emitter {
     const addr = getAddress(address);
     const result = this.buffer.readUInt16LE(addr.address);
 
-    this.emit(
-      {
-        type: 'READ_16',
-        address: addr,
-        result,
-      },
-      this.getBuffer(),
-    );
+    this.emitRead16(addr, result, this.getBuffer());
 
     return result;
   }
@@ -144,14 +101,7 @@ export class Memory extends Emitter {
 
     this.buffer.writeUInt8(value & 0xff, addr.address);
 
-    this.emit(
-      {
-        type: 'WRITE_8',
-        value,
-        address: addr,
-      },
-      this.getBuffer(),
-    );
+    this.emitWrite8(value, addr, this.getBuffer());
   }
 
   /**
@@ -165,14 +115,7 @@ export class Memory extends Emitter {
 
     this.buffer.writeUInt16LE(value & 0xffff, addr.address);
 
-    this.emit(
-      {
-        type: 'WRITE_16',
-        value,
-        address: addr,
-      },
-      this.getBuffer(),
-    );
+    this.emitWrite16(value, addr, this.getBuffer());
   }
 
   /**
@@ -195,15 +138,7 @@ export class Memory extends Emitter {
       this.buffer.fill(value & 0xff, f.address, t.address + 1);
     }
 
-    this.emit(
-      {
-        type: 'FILL',
-        value,
-        from: f,
-        to: t,
-      },
-      this.getBuffer(),
-    );
+    this.emitFill(value, f, t, this.getBuffer());
 
     return Math.max(0, t.address - f.address + 1);
   }
@@ -230,15 +165,7 @@ export class Memory extends Emitter {
       );
     }
 
-    this.emit(
-      {
-        type: 'COPY_FORWARD',
-        src: s,
-        dest: d,
-        count,
-      },
-      this.getBuffer(),
-    );
+    this.emitCopyForward(s, d, count, this.getBuffer());
   }
 
   /**
@@ -263,14 +190,15 @@ export class Memory extends Emitter {
       );
     }
 
-    this.emit(
-      {
-        type: 'COPY_BACKWARD',
-        src: s,
-        dest: d,
-        count,
-      },
-      this.getBuffer(),
-    );
+    this.emitCopyBackward(s, d, count, this.getBuffer());
+  }
+
+  /**
+   * Add comment. no effect to memory.
+   *
+   * @param comment
+   */
+  public comment(comment: string): void {
+    this.emitComment(comment, this.getBuffer());
   }
 }

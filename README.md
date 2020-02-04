@@ -11,10 +11,6 @@ Tools for retro computer programing.
 
 - Listeners can receive events on memory operations.
 
-### MemoryLogger
-
-- Simple implementation of `MemoryListener`.
-
 ## Address
 
 - Useful class & utility for named addresses.

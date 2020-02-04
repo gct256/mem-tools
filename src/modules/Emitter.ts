@@ -1,9 +1,34 @@
-import { Event } from './Event';
 import { MemoryListener } from './MemoryListener';
+
+const emptyListener: MemoryListener = {
+  read8() {
+    //
+  },
+  read16() {
+    //
+  },
+  write8() {
+    //
+  },
+  write16() {
+    //
+  },
+  fill() {
+    //
+  },
+  copyForward() {
+    //
+  },
+  copyBackward() {
+    //
+  },
+  comment() {
+    //
+  },
+};
 
 /** Internal event emitter. */
 export class Emitter {
-  private listen = true;
   private listeners: MemoryListener[] = [];
 
   /**
@@ -11,55 +36,43 @@ export class Emitter {
    *
    * @param listener
    */
-  public addListener(listener: MemoryListener): void {
-    if (!this.listeners.includes(listener)) {
-      this.listeners.push(listener);
-    }
+  public addListener(listener: Partial<MemoryListener>): void {
+    this.listeners.push({ ...emptyListener, ...listener });
   }
 
-  /**
-   * Remove listener.
-   *
-   * @param listener
-   */
-  public removeListener(listener: MemoryListener): void {
-    const index = this.listeners.indexOf(listener);
-
-    if (index >= 0) this.listeners.splice(index, 1);
+  protected emitRead8(...args: Parameters<MemoryListener['read8']>): void {
+    this.listeners.forEach(({ read8 }) => read8(...args));
   }
 
-  /**
-   * Remove all listeners.
-   */
-  public removeAllListeners(): void {
-    while (this.listeners.length > 0) this.listeners.pop();
+  protected emitRead16(...args: Parameters<MemoryListener['read16']>): void {
+    this.listeners.forEach(({ read16 }) => read16(...args));
   }
 
-  /**
-   * Emit event.
-   *
-   * @param event
-   * @param buffer node's Buffer of memory.
-   */
-  public emit(event: Event, buffer: Buffer): void {
-    if (this.listen) {
-      this.listeners.forEach((listener) =>
-        listener.handleEvent({ ...event }, buffer),
-      );
-    }
+  protected emitWrite8(...args: Parameters<MemoryListener['write8']>): void {
+    this.listeners.forEach(({ write8 }) => write8(...args));
   }
 
-  /**
-   * Enable event emission.
-   */
-  public enableEmission(): void {
-    this.listen = true;
+  protected emitWrite16(...args: Parameters<MemoryListener['write16']>): void {
+    this.listeners.forEach(({ write16 }) => write16(...args));
   }
 
-  /**
-   * Disable event emission.
-   */
-  public disableEmission(): void {
-    this.listen = false;
+  protected emitFill(...args: Parameters<MemoryListener['fill']>): void {
+    this.listeners.forEach(({ fill }) => fill(...args));
+  }
+
+  protected emitCopyForward(
+    ...args: Parameters<MemoryListener['copyForward']>
+  ): void {
+    this.listeners.forEach(({ copyForward }) => copyForward(...args));
+  }
+
+  protected emitCopyBackward(
+    ...args: Parameters<MemoryListener['copyBackward']>
+  ): void {
+    this.listeners.forEach(({ copyBackward }) => copyBackward(...args));
+  }
+
+  protected emitComment(...args: Parameters<MemoryListener['comment']>): void {
+    this.listeners.forEach(({ comment }) => comment(...args));
   }
 }

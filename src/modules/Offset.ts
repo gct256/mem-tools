@@ -77,6 +77,26 @@ export class Offset implements OffsetData {
   }
 
   /**
+   * Create name and Offset as key-value object.
+   *
+   * @param values key and value.
+   */
+  public static createDict<T extends { [key: string]: number }>(
+    values: T,
+  ): { [P in keyof T]: Offset } {
+    const keys = Object.keys(values) as (keyof T)[];
+    const result: { [P in keyof T]: Offset } = Object.create(null);
+
+    keys.forEach((k) => {
+      const v = values[k] as OffsetData | number;
+
+      result[k] = new Offset(k as string, typeof v === 'number' ? v : v.offset);
+    });
+
+    return { ...result };
+  }
+
+  /**
    * Create name and Offset as key-value object for work area.
    * Append utility labels.
    * - __FIRST__: first offset of work area.

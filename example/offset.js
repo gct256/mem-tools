@@ -18,6 +18,24 @@ common.example('anonymous', () => {
   );
 });
 
+common.example('createDict', () => {
+  const DICT = sim.Offset.createDict({
+    FOO: 1,
+    BAR: 2,
+    BAZ: 3,
+  });
+  const QUX = new sim.Offset('QUX', -10);
+  const address = new sim.Address('QUUX', 0xcb00);
+
+  common.log(DICT);
+  common.log(
+    address.offset(DICT.FOO),
+    address.offset(DICT.BAR),
+    address.offset(DICT.BAZ),
+    address.offset(QUX),
+  );
+});
+
 common.example('createWork', () => {
   const WORK = sim.Offset.createWork({
     FOO: 1,

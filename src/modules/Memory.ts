@@ -119,6 +119,36 @@ export class Memory extends Emitter {
   }
 
   /**
+   * Set bit flag.
+   *
+   * @param bit bit number. (0 <= bit <= 7)
+   * @param address
+   */
+  public setFlag(bit: number, address: Address | number): void {
+    this.writeInt8(this.readUInt8(address) | (1 << bit), address);
+  }
+
+  /**
+   * Unset bit flag.
+   *
+   * @param bit bit number. (0 <= bit <= 7)
+   * @param address
+   */
+  public unsetFlag(bit: number, address: Address | number): void {
+    this.writeInt8(this.readUInt8(address) & ~(1 << bit), address);
+  }
+
+  /**
+   * Check if bit flag is set.
+   *
+   * @param bit bit number. (0 <= bit <= 7)
+   * @param address
+   */
+  public isSetFlag(bit: number, address: Address | number): boolean {
+    return (this.readUInt8(address) & (1 << bit)) !== 0;
+  }
+
+  /**
    * Fill memory with value.
    * If FROM address larger than TO address, no effect to memory.
    *

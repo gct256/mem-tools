@@ -28,6 +28,23 @@ export class Memory extends Emitter {
   }
 
   /**
+   * Create memory object from node's Buffer.
+   *
+   * @param buffer node's Buffer.
+   */
+  public static fromBuffer(buffer: Buffer): Memory {
+    const result = new Memory();
+
+    result.buffer.fill(
+      buffer,
+      0,
+      Math.min(result.buffer.length, buffer.length),
+    );
+
+    return result;
+  }
+
+  /**
    * Return memory as node's Buffer.
    */
   public getBuffer(): Buffer {

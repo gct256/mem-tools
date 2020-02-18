@@ -1,6 +1,7 @@
 import { formatters } from './formatters';
-import { Work, createWork } from './Work';
+import { Work } from './Work';
 import { OffsetData, Offset } from './Offset';
+import { utils } from './utils';
 
 /** Object interface for named address. */
 export type AddressData = {
@@ -124,23 +125,16 @@ export class Address implements AddressData {
    * Create name and Address as key-value object.
    *
    * @param values key and value.
+   * @deprecated use utils.createAddressMap
    */
   public static createDict<T extends { [key: string]: AddressData | number }>(
     values: T,
   ): { [P in keyof T]: Address } {
-    const keys = Object.keys(values) as (keyof T)[];
-    const result: { [P in keyof T]: Address } = Object.create(null);
+    console.warn(
+      'Address.createDict is deperecated. use utils.createAddressMap.',
+    );
 
-    keys.forEach((k) => {
-      const v = values[k] as AddressData | number;
-
-      result[k] = new Address(
-        k as string,
-        typeof v === 'number' ? v : v.address,
-      );
-    });
-
-    return { ...result };
+    return utils.createAddressMap(values);
   }
 
   /**
@@ -153,34 +147,16 @@ export class Address implements AddressData {
    *
    * @param start start address.
    * @param values key and value.
+   * @deprecated use utils.createAddressWorkMap
    */
   public static createWork<T extends { [key: string]: number }>(
     start: number | AddressData,
     values: T,
   ): { [P in keyof T]: Address } & Work<Address> {
-    const s = typeof start === 'number' ? start : start.address;
+    console.warn(
+      'Address.createWork is deperecated. use utils.createAddressWorkMap.',
+    );
 
-    let offset = s;
-
-    const keys = Object.keys(values) as (keyof T)[];
-    const result: { [P in keyof T]: Address } = Object.create(null);
-
-    keys.forEach((k) => {
-      const v = values[k] as number;
-
-      result[k] = new Address(k as string, offset);
-
-      offset += v;
-    });
-
-    return {
-      ...result,
-      ...createWork(
-        (x) => new Address(x, s),
-        (x) => new Address(x, offset - 1),
-        (x) => new Address(x, offset),
-        offset - s,
-      ),
-    };
+    return utils.createAddressWorkMap(start, values);
   }
 }

@@ -1,5 +1,6 @@
-import { Work, createWork } from './Work';
+import { Work } from './Work';
 import { formatters } from './formatters';
+import { utils } from './utils';
 
 const format = (offset: number, delimiter = ' '): string => {
   if (offset < 0) {
@@ -80,20 +81,16 @@ export class Offset implements OffsetData {
    * Create name and Offset as key-value object.
    *
    * @param values key and value.
+   * @deprecated use utils.createOffsetMap.
    */
   public static createDict<T extends { [key: string]: number }>(
     values: T,
   ): { [P in keyof T]: Offset } {
-    const keys = Object.keys(values) as (keyof T)[];
-    const result: { [P in keyof T]: Offset } = Object.create(null);
+    console.warn(
+      'Offset.createDict is deperecated. use utils.createOffsetMap.',
+    );
 
-    keys.forEach((k) => {
-      const v = values[k] as OffsetData | number;
-
-      result[k] = new Offset(k as string, typeof v === 'number' ? v : v.offset);
-    });
-
-    return { ...result };
+    return utils.createOffsetMap(values);
   }
 
   /**
@@ -105,30 +102,15 @@ export class Offset implements OffsetData {
    * - __SIZE__: count of work arae. (number)
    *
    * @param values key and value.
+   * @deprecated use utils.createOffsetWorkMap.
    */
   public static createWork<T extends { [key: string]: number }>(
     values: T,
   ): { [P in keyof T]: Offset } & Work<Offset> {
-    let before = 0;
-    let offset = 0;
+    console.warn(
+      'Offset.createWork is deperecated. use utils.createOffsetWorkMap.',
+    );
 
-    const keys = Object.keys(values) as (keyof T)[];
-    const result: { [P in keyof T]: Offset } = Object.create(null);
-
-    keys.forEach((k) => {
-      result[k] = new Offset(k as string, offset);
-      before = offset;
-      offset += values[k] as number;
-    });
-
-    return {
-      ...result,
-      ...createWork(
-        (x) => new Offset(x, 0),
-        (x) => new Offset(x, before),
-        (x) => new Offset(x, offset),
-        keys.length,
-      ),
-    };
+    return utils.createOffsetWorkMap(values);
   }
 }

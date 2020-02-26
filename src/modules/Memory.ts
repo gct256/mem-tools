@@ -144,10 +144,17 @@ export class Memory extends Emitter {
    */
   public writeInt8(value: number, address: Address | number): void {
     const addr = getAddress(address);
+    const before = this.buffer.readUInt8(addr.address);
 
     this.buffer.writeUInt8(value & 0xff, addr.address);
 
-    this.emitWrite8(value, addr, this.getBuffer());
+    this.emitWrite8(
+      value,
+      addr,
+      before,
+      this.buffer.readUInt8(addr.address),
+      this.getBuffer(),
+    );
   }
 
   /**
@@ -158,10 +165,17 @@ export class Memory extends Emitter {
    */
   public writeInt16(value: number, address: Address | number): void {
     const addr = getAddress(address);
+    const before = this.buffer.readUInt16LE(addr.address);
 
     this.buffer.writeUInt16LE(value & 0xffff, addr.address);
 
-    this.emitWrite16(value, addr, this.getBuffer());
+    this.emitWrite16(
+      value,
+      addr,
+      before,
+      this.buffer.readUInt16LE(addr.address),
+      this.getBuffer(),
+    );
   }
 
   /**

@@ -9,10 +9,22 @@ export type MemoryListener = {
   read16(address: Address, result: number, buffer: Buffer): void;
 
   /** Call on write 8bit value. */
-  write8(value: number, address: Address, buffer: Buffer): void;
+  write8(
+    value: number,
+    address: Address,
+    before: number,
+    after: number,
+    buffer: Buffer,
+  ): void;
 
   /** Call on write 16bit value. */
-  write16(value: number, address: Address, buffer: Buffer): void;
+  write16(
+    value: number,
+    address: Address,
+    before: number,
+    after: number,
+    buffer: Buffer,
+  ): void;
 
   /** Call on fill. */
   fill(value: number, from: Address, to: Address, buffer: Buffer): void;

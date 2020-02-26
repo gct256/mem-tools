@@ -57,14 +57,16 @@ test('write8', () => {
   const data = [];
 
   foo.addListener({
-    write8(value, address, buffer) {
-      data.push({ value, address });
+    write8(value, address, before, after, buffer) {
+      data.push({ value, address, before, after });
       expect(buffer).toEqual(foo.getBuffer());
     },
   });
 
-  foo.writeInt8(1, 42);
-  foo.writeInt8(2, new Address('foo', 43));
+  foo.writeInt8(1, 41);
+  foo.writeInt8(-2, new Address('foo', 42));
+  foo.writeInt8(257, 43);
+
   foo.setFlag(7, 44);
   foo.setFlag(7, new Address('bar', 45));
   foo.unsetFlag(3, 46);
@@ -76,16 +78,72 @@ test('write8', () => {
   foo.unsetFlag(7, new Address('quux', 51));
 
   expect(data).toEqual([
-    { value: 1, address: new Address(undefined, 42) },
-    { value: 2, address: new Address('foo', 43) },
-    { value: 44 + 128, address: new Address(undefined, 44) },
-    { value: 45 + 128, address: new Address('bar', 45) },
-    { value: 46 - 8, address: new Address(undefined, 46) },
-    { value: 47 - 8, address: new Address('baz', 47) },
-    { value: 48, address: new Address(undefined, 48) },
-    { value: 49, address: new Address('qux', 49) },
-    { value: 50, address: new Address(undefined, 50) },
-    { value: 51, address: new Address('quux', 51) },
+    {
+      value: 1,
+      address: new Address(undefined, 41),
+      before: 41,
+      after: 1,
+    },
+    {
+      value: -2,
+      address: new Address('foo', 42),
+      before: 42,
+      after: -2 & 0xff,
+    },
+    {
+      value: 257,
+      address: new Address(undefined, 43),
+      before: 43,
+      after: 257 & 0xff,
+    },
+    {
+      value: 44 + 128,
+      address: new Address(undefined, 44),
+      before: 44,
+      after: 44 + 128,
+    },
+    {
+      value: 45 + 128,
+      address: new Address('bar', 45),
+      before: 45,
+      after: 45 + 128,
+    },
+    {
+      value: 46 - 8,
+      address: new Address(undefined, 46),
+      before: 46,
+      after: 46 - 8,
+    },
+    {
+      value: 47 - 8,
+      address: new Address('baz', 47),
+      before: 47,
+      after: 47 - 8,
+    },
+    {
+      value: 48,
+      address: new Address(undefined, 48),
+      before: 48,
+      after: 48,
+    },
+    {
+      value: 49,
+      address: new Address('qux', 49),
+      before: 49,
+      after: 49,
+    },
+    {
+      value: 50,
+      address: new Address(undefined, 50),
+      before: 50,
+      after: 50,
+    },
+    {
+      value: 51,
+      address: new Address('quux', 51),
+      before: 51,
+      after: 51,
+    },
   ]);
 });
 
@@ -94,18 +152,35 @@ test('write16', () => {
   const data = [];
 
   foo.addListener({
-    write16(value, address, buffer) {
-      data.push({ value, address });
+    write16(value, address, before, after, buffer) {
+      data.push({ value, address, before, after });
       expect(buffer).toEqual(foo.getBuffer());
     },
   });
 
   foo.writeInt16(0x1234, 42);
-  foo.writeInt16(0x5678, new Address('foo', 44));
+  foo.writeInt16(-0x5678, new Address('foo', 44));
+  foo.writeInt16(0x9abcd, new Address('bar', 46));
 
   expect(data).toEqual([
-    { value: 0x1234, address: new Address(undefined, 42) },
-    { value: 0x5678, address: new Address('foo', 44) },
+    {
+      value: 0x1234,
+      address: new Address(undefined, 42),
+      before: 0x2b2a,
+      after: 0x1234,
+    },
+    {
+      value: -0x5678,
+      address: new Address('foo', 44),
+      before: 0x2d2c,
+      after: -0x5678 & 0xffff,
+    },
+    {
+      value: 0x9abcd,
+      address: new Address('bar', 46),
+      before: 0x2f2e,
+      after: 0x9abcd & 0xffff,
+    },
   ]);
 });
 

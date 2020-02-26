@@ -7,3 +7,6 @@ prettier.config.js
 rollup.config.js
 tsconfig.json
 yarn.lock
+__tests__
+coverage
+babel.config.js

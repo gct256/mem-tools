@@ -2,28 +2,80 @@ import { Memory, Address } from '../src';
 
 describe('constructor', () => {
   test('no parameters', () => {
-    expect(new Memory()).toBeInstanceOf(Memory);
-    expect(new Memory().getBuffer().slice(0, 8)).toEqual(
-      Buffer.alloc(8).fill(0),
-    );
+    const foo = new Memory();
+
+    expect(foo).toBeInstanceOf(Memory);
+    expect(foo.getBuffer().slice(0, 8)).toEqual(Buffer.alloc(8).fill(0));
   });
   test('with parameters', () => {
-    expect(new Memory((i) => i * 42)).toBeInstanceOf(Memory);
-    expect(new Memory((i) => i * 42).getBuffer().slice(0, 8)).toEqual(
+    const foo = new Memory((i) => i * 42);
+
+    expect(foo).toBeInstanceOf(Memory);
+    expect(foo.getBuffer().slice(0, 8)).toEqual(
       Buffer.from([0, 42, 42 * 2, 42 * 3, 42 * 4, 42 * 5, 42 * 6, 42 * 7]),
     );
   });
 });
 
-test('Memory.fromBuffer', () => {
-  expect(Memory.fromBuffer(Buffer.from([1, 2, 3, 4, 5]))).toBeInstanceOf(
-    Memory,
-  );
-  expect(
-    Memory.fromBuffer(Buffer.from([1, 2, 3, 4, 5]))
-      .getBuffer()
-      .slice(0, 8),
-  ).toEqual(Buffer.from([1, 2, 3, 4, 5, 0, 0, 0]));
+describe('Memory.from', () => {
+  test('from Buffer', () => {
+    const foo = Memory.from(Buffer.from([1, 2, 3, 4, 5]));
+
+    expect(foo).toBeInstanceOf(Memory);
+    expect(foo.getBuffer().slice(0, 8)).toEqual(
+      Buffer.from([1, 2, 3, 4, 5, 0, 0, 0]),
+    );
+  });
+
+  test('from number[]', () => {
+    const foo = Memory.from([1, 2, 3, 4, 5]);
+
+    expect(foo).toBeInstanceOf(Memory);
+    expect(foo.getBuffer().slice(0, 8)).toEqual(
+      Buffer.from([1, 2, 3, 4, 5, 0, 0, 0]),
+    );
+  });
+
+  test('from string]', () => {
+    const foo = Memory.from('ABCDE');
+
+    expect(foo).toBeInstanceOf(Memory);
+    expect(foo.getBuffer().slice(0, 8)).toEqual(
+      Buffer.from([0x41, 0x42, 0x43, 0x44, 0x45, 0, 0, 0]),
+    );
+  });
+
+  test('from Uint8Array', () => {
+    const foo = Memory.from(Uint8Array.from([1, 2, 3, 4, 5]));
+
+    expect(foo).toBeInstanceOf(Memory);
+    expect(foo.getBuffer().slice(0, 8)).toEqual(
+      Buffer.from([1, 2, 3, 4, 5, 0, 0, 0]),
+    );
+  });
+
+  test('from Uint8ClampedArray', () => {
+    const foo = Memory.from(Uint8ClampedArray.from([1, 2, 3, 4, 5]));
+
+    expect(foo).toBeInstanceOf(Memory);
+    expect(foo.getBuffer().slice(0, 8)).toEqual(
+      Buffer.from([1, 2, 3, 4, 5, 0, 0, 0]),
+    );
+  });
+
+  test('from Int8Array', () => {
+    const foo = Memory.from(Int8Array.from([1, 2, 3, 4, 5]));
+
+    expect(foo).toBeInstanceOf(Memory);
+    expect(foo.getBuffer().slice(0, 8)).toEqual(
+      Buffer.from([1, 2, 3, 4, 5, 0, 0, 0]),
+    );
+  });
+
+  test('from other', () => {
+    expect(() => Memory.from(null)).toThrow();
+    expect(() => Memory.from({} as string)).toThrow();
+  });
 });
 
 test('getBuffer', () => {
@@ -35,9 +87,7 @@ test('getBuffer', () => {
 });
 
 test('readInt8', () => {
-  const foo = Memory.fromBuffer(
-    Buffer.from([0x00, 0x01, 0x7f, 0x80, 0xfe, 0xff]),
-  );
+  const foo = Memory.from([0x00, 0x01, 0x7f, 0x80, 0xfe, 0xff]);
 
   expect(foo.readInt8(0)).toBe(0x00);
   expect(foo.readInt8(1)).toBe(0x01);
@@ -48,9 +98,7 @@ test('readInt8', () => {
 });
 
 test('readUInt8', () => {
-  const foo = Memory.fromBuffer(
-    Buffer.from([0x00, 0x01, 0x7f, 0x80, 0xfe, 0xff]),
-  );
+  const foo = Memory.from([0x00, 0x01, 0x7f, 0x80, 0xfe, 0xff]);
 
   expect(foo.readUInt8(0)).toBe(0x00);
   expect(foo.readUInt8(1)).toBe(0x1);
@@ -61,9 +109,7 @@ test('readUInt8', () => {
 });
 
 test('readInt16', () => {
-  const foo = Memory.fromBuffer(
-    Buffer.from([0x00, 0x01, 0x7f, 0x80, 0xfe, 0xff]),
-  );
+  const foo = Memory.from([0x00, 0x01, 0x7f, 0x80, 0xfe, 0xff]);
 
   expect(foo.readInt16(0)).toBe(0x0100);
   expect(foo.readInt16(1)).toBe(0x7f01);
@@ -73,9 +119,7 @@ test('readInt16', () => {
 });
 
 test('readUInt16', () => {
-  const foo = Memory.fromBuffer(
-    Buffer.from([0x00, 0x01, 0x7f, 0x80, 0xfe, 0xff]),
-  );
+  const foo = Memory.from([0x00, 0x01, 0x7f, 0x80, 0xfe, 0xff]);
 
   expect(foo.readUInt16(0)).toBe(0x0100);
   expect(foo.readUInt16(1)).toBe(0x7f01);
@@ -137,7 +181,7 @@ test('writeInt16', () => {
 });
 
 test('setFlag', () => {
-  const foo = Memory.fromBuffer(Buffer.from([0x00, 0xff]));
+  const foo = Memory.from([0x00, 0xff]);
 
   foo.setFlag(0, 0);
   foo.setFlag(2, 0);
@@ -151,7 +195,7 @@ test('setFlag', () => {
 });
 
 test('unsetFlag', () => {
-  const foo = Memory.fromBuffer(Buffer.from([0x00, 0xff]));
+  const foo = Memory.from([0x00, 0xff]);
 
   foo.unsetFlag(0, 0);
   foo.unsetFlag(2, 0);
@@ -165,7 +209,7 @@ test('unsetFlag', () => {
 });
 
 test('isSetFlag', () => {
-  const foo = Memory.fromBuffer(Buffer.from([0xaa, 0x55]));
+  const foo = Memory.from([0xaa, 0x55]);
 
   expect(foo.isSetFlag(0, 0)).toBe(false);
   expect(foo.isSetFlag(1, 0)).toBe(true);
@@ -211,7 +255,7 @@ test('fill', () => {
 });
 
 test('copyForward', () => {
-  const foo = Memory.fromBuffer(Buffer.from([0, 1, 2, 3, 4, 5, 6, 7]));
+  const foo = Memory.from([0, 1, 2, 3, 4, 5, 6, 7]);
 
   foo.copyForward(0, 8, 8);
   expect(foo.getBuffer().slice(0, 16)).toEqual(
@@ -230,7 +274,7 @@ test('copyForward', () => {
 });
 
 test('copyBackward', () => {
-  const foo = Memory.fromBuffer(Buffer.from([0, 1, 2, 3, 4, 5, 6, 7]));
+  const foo = Memory.from([0, 1, 2, 3, 4, 5, 6, 7]);
 
   foo.copyBackward(0, 8, 8);
   expect(foo.getBuffer().slice(0, 16)).toEqual(

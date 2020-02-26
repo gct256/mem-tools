@@ -28,20 +28,49 @@ export class Memory extends Emitter {
   }
 
   /**
-   * Create memory object from node's Buffer.
+   * Create memory object from data.
    *
-   * @param buffer node's Buffer.
+   * @param data number's array, utf-8 string, 8bit typed array or node's Buffer.
    */
-  public static fromBuffer(buffer: Buffer): Memory {
-    const result = new Memory();
+  public static from(
+    data:
+      | number[]
+      | string
+      | Uint8Array
+      | Uint8ClampedArray
+      | Int8Array
+      | Buffer,
+  ): Memory {
+    try {
+      if (data instanceof Buffer) {
+        const result = new Memory();
 
-    result.buffer.fill(
-      buffer,
-      0,
-      Math.min(result.buffer.length, buffer.length),
-    );
+        result.buffer.fill(
+          data,
+          0,
+          Math.min(result.buffer.length, data.length),
+        );
 
-    return result;
+        return result;
+      }
+
+      if (typeof data === 'string') {
+        return Memory.from(Buffer.from(data, 'utf8'));
+      }
+
+      if (
+        data instanceof Uint8Array ||
+        data instanceof Uint8ClampedArray ||
+        data instanceof Int8Array ||
+        Array.isArray(data)
+      ) {
+        return Memory.from(Buffer.from(data));
+      }
+    } catch {
+      // thru
+    }
+
+    throw new Error('unsupported data type.');
   }
 
   /**

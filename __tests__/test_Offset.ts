@@ -1,4 +1,4 @@
-import { Offset, utils } from '../src';
+import { Offset } from '../src';
 
 describe('constructor', () => {
   test('(string, number)', () => {
@@ -110,13 +110,9 @@ test('of', () => {
 });
 
 test('createDict', () => {
-  expect(Offset.createDict({ FOO: 0, BAR: 2, BAZ: 4 })).toEqual(
-    utils.createOffsetMap({ FOO: 0, BAR: 2, BAZ: 4 }),
-  );
+  expect(() => Offset.createDict({ FOO: 0, BAR: 2, BAZ: 4 })).toThrow();
 });
 
 test('createWork', () => {
-  expect(Offset.createWork({ FOO: 1, BAR: 2, BAZ: 2 })).toEqual(
-    utils.createOffsetWorkMap({ FOO: 1, BAR: 2, BAZ: 2 }),
-  );
+  expect(() => Offset.createWork({ FOO: 1, BAR: 2, BAZ: 2 })).toThrow();
 });

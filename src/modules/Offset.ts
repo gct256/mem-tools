@@ -1,6 +1,5 @@
 import { Work } from './Work';
 import { formatters } from './formatters';
-import { utils } from './utils';
 
 const format = (offset: number, delimiter = ' '): string => {
   if (offset < 0) {
@@ -86,13 +85,11 @@ export class Offset implements OffsetData {
    * @deprecated use utils.createOffsetMap.
    */
   public static createDict<T extends { [key: string]: number }>(
-    values: T,
+    _values: T,
   ): { [P in keyof T]: Offset } {
-    console.warn(
+    throw new Error(
       'Offset.createDict is deperecated. use utils.createOffsetMap.',
     );
-
-    return utils.createOffsetMap(values);
   }
 
   /**
@@ -107,12 +104,10 @@ export class Offset implements OffsetData {
    * @deprecated use utils.createOffsetWorkMap.
    */
   public static createWork<T extends { [key: string]: number }>(
-    values: T,
+    _values: T,
   ): { [P in keyof T]: Offset } & Work<Offset> {
-    console.warn(
+    throw new Error(
       'Offset.createWork is deperecated. use utils.createOffsetWorkMap.',
     );
-
-    return utils.createOffsetWorkMap(values);
   }
 }

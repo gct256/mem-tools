@@ -1,275 +1,277 @@
-import { Address, Offset, utils } from '../src';
+import { Address, Offset } from '../src';
 
 describe('constructor', () => {
   test('(string, number)', () => {
-    expect(new Address('foo', 42)).toBeInstanceOf(Address);
-    expect(new Address('foo', 42).address).toBe(42);
-    expect(new Address('foo', 42).addressOffset).toBeInstanceOf(Offset);
-    expect(new Address('foo', 42).addressOffset.anonymous).toBe(true);
-    expect(new Address('foo', 42).addressOffset.name).toBe('+ 0000ʰ');
-    expect(new Address('foo', 42).addressOffset.offset).toBe(0);
-    expect(new Address('foo', 42).anonymous).toBe(false);
-    expect(new Address('foo', 42).baseAddress).toBe(42);
-    expect(new Address('foo', 42).name).toBe('foo');
+    const foo = new Address('foo', 42);
+
+    expect(foo).toBeInstanceOf(Address);
+    expect(foo.address).toBe(42);
+    expect(foo.addressOffset).toBeInstanceOf(Offset);
+    expect(foo.addressOffset.anonymous).toBe(true);
+    expect(foo.addressOffset.name).toBe('+ 0000ʰ');
+    expect(foo.addressOffset.offset).toBe(0);
+    expect(foo.anonymous).toBe(false);
+    expect(foo.baseAddress).toBe(42);
+    expect(foo.name).toBe('foo');
   });
 
   test('(string, not number)', () => {
-    expect(new Address('foo', NaN)).toBeInstanceOf(Address);
-    expect(new Address('foo', NaN).address).toBe(0);
-    expect(new Address('foo', NaN).addressOffset).toBeInstanceOf(Offset);
-    expect(new Address('foo', NaN).addressOffset.anonymous).toBe(true);
-    expect(new Address('foo', NaN).addressOffset.name).toBe('+ 0000ʰ');
-    expect(new Address('foo', NaN).addressOffset.offset).toBe(0);
-    expect(new Address('foo', NaN).anonymous).toBe(false);
-    expect(new Address('foo', NaN).baseAddress).toBe(0);
-    expect(new Address('foo', NaN).name).toBe('foo');
+    const foo = new Address('foo', NaN);
 
-    expect(new Address('foo', Infinity)).toBeInstanceOf(Address);
-    expect(new Address('foo', Infinity).address).toBe(0);
-    expect(new Address('foo', Infinity).addressOffset).toBeInstanceOf(Offset);
-    expect(new Address('foo', Infinity).addressOffset.anonymous).toBe(true);
-    expect(new Address('foo', Infinity).addressOffset.name).toBe('+ 0000ʰ');
-    expect(new Address('foo', Infinity).addressOffset.offset).toBe(0);
-    expect(new Address('foo', Infinity).anonymous).toBe(false);
-    expect(new Address('foo', Infinity).baseAddress).toBe(0);
-    expect(new Address('foo', Infinity).name).toBe('foo');
+    expect(foo).toBeInstanceOf(Address);
+    expect(foo.address).toBe(0);
+    expect(foo.addressOffset).toBeInstanceOf(Offset);
+    expect(foo.addressOffset.anonymous).toBe(true);
+    expect(foo.addressOffset.name).toBe('+ 0000ʰ');
+    expect(foo.addressOffset.offset).toBe(0);
+    expect(foo.anonymous).toBe(false);
+    expect(foo.baseAddress).toBe(0);
+    expect(foo.name).toBe('foo');
 
-    expect(new Address('foo', -Infinity)).toBeInstanceOf(Address);
-    expect(new Address('foo', -Infinity).address).toBe(0);
-    expect(new Address('foo', -Infinity).addressOffset).toBeInstanceOf(Offset);
-    expect(new Address('foo', -Infinity).addressOffset.anonymous).toBe(true);
-    expect(new Address('foo', -Infinity).addressOffset.name).toBe('+ 0000ʰ');
-    expect(new Address('foo', -Infinity).addressOffset.offset).toBe(0);
-    expect(new Address('foo', -Infinity).anonymous).toBe(false);
-    expect(new Address('foo', -Infinity).baseAddress).toBe(0);
-    expect(new Address('foo', -Infinity).name).toBe('foo');
+    const bar = new Address('foo', Infinity);
+
+    expect(bar).toBeInstanceOf(Address);
+    expect(bar.address).toBe(0);
+    expect(bar.addressOffset).toBeInstanceOf(Offset);
+    expect(bar.addressOffset.anonymous).toBe(true);
+    expect(bar.addressOffset.name).toBe('+ 0000ʰ');
+    expect(bar.addressOffset.offset).toBe(0);
+    expect(bar.anonymous).toBe(false);
+    expect(bar.baseAddress).toBe(0);
+    expect(bar.name).toBe('foo');
+
+    const baz = new Address('foo', -Infinity);
+
+    expect(baz).toBeInstanceOf(Address);
+    expect(baz.address).toBe(0);
+    expect(baz.addressOffset).toBeInstanceOf(Offset);
+    expect(baz.addressOffset.anonymous).toBe(true);
+    expect(baz.addressOffset.name).toBe('+ 0000ʰ');
+    expect(baz.addressOffset.offset).toBe(0);
+    expect(baz.anonymous).toBe(false);
+    expect(baz.baseAddress).toBe(0);
+    expect(baz.name).toBe('foo');
   });
 
   test('(undefined, number)', () => {
-    expect(new Address(undefined, 42)).toBeInstanceOf(Address);
-    expect(new Address(undefined, 42).address).toBe(42);
-    expect(new Address(undefined, 42).addressOffset).toBeInstanceOf(Offset);
-    expect(new Address(undefined, 42).addressOffset.anonymous).toBe(true);
-    expect(new Address(undefined, 42).addressOffset.name).toBe('+ 0000ʰ');
-    expect(new Address(undefined, 42).addressOffset.offset).toBe(0);
-    expect(new Address(undefined, 42).anonymous).toBe(true);
-    expect(new Address(undefined, 42).baseAddress).toBe(42);
-    expect(new Address(undefined, 42).name).toBe('<anonymous 002Aʰ>');
+    const foo = new Address(undefined, 42);
+
+    expect(foo).toBeInstanceOf(Address);
+    expect(foo.address).toBe(42);
+    expect(foo.addressOffset).toBeInstanceOf(Offset);
+    expect(foo.addressOffset.anonymous).toBe(true);
+    expect(foo.addressOffset.name).toBe('+ 0000ʰ');
+    expect(foo.addressOffset.offset).toBe(0);
+    expect(foo.anonymous).toBe(true);
+    expect(foo.baseAddress).toBe(42);
+    expect(foo.name).toBe('<anonymous 002Aʰ>');
   });
 
   test('(undefined, not number)', () => {
-    expect(new Address(undefined, NaN)).toBeInstanceOf(Address);
-    expect(new Address(undefined, NaN).address).toBe(0);
-    expect(new Address(undefined, NaN).addressOffset).toBeInstanceOf(Offset);
-    expect(new Address(undefined, NaN).addressOffset.anonymous).toBe(true);
-    expect(new Address(undefined, NaN).addressOffset.name).toBe('+ 0000ʰ');
-    expect(new Address(undefined, NaN).addressOffset.offset).toBe(0);
-    expect(new Address(undefined, NaN).anonymous).toBe(true);
-    expect(new Address(undefined, NaN).baseAddress).toBe(0);
-    expect(new Address(undefined, NaN).name).toBe('<anonymous 0000ʰ>');
+    const foo = new Address(undefined, NaN);
 
-    expect(new Address(undefined, Infinity)).toBeInstanceOf(Address);
-    expect(new Address(undefined, Infinity).address).toBe(0);
-    expect(new Address(undefined, Infinity).addressOffset).toBeInstanceOf(
-      Offset,
-    );
-    expect(new Address(undefined, Infinity).addressOffset.anonymous).toBe(true);
-    expect(new Address(undefined, Infinity).addressOffset.name).toBe('+ 0000ʰ');
-    expect(new Address(undefined, Infinity).addressOffset.offset).toBe(0);
-    expect(new Address(undefined, Infinity).anonymous).toBe(true);
-    expect(new Address(undefined, Infinity).baseAddress).toBe(0);
-    expect(new Address(undefined, Infinity).name).toBe('<anonymous 0000ʰ>');
+    expect(foo).toBeInstanceOf(Address);
+    expect(foo.address).toBe(0);
+    expect(foo.addressOffset).toBeInstanceOf(Offset);
+    expect(foo.addressOffset.anonymous).toBe(true);
+    expect(foo.addressOffset.name).toBe('+ 0000ʰ');
+    expect(foo.addressOffset.offset).toBe(0);
+    expect(foo.anonymous).toBe(true);
+    expect(foo.baseAddress).toBe(0);
+    expect(foo.name).toBe('<anonymous 0000ʰ>');
 
-    expect(new Address(undefined, -Infinity)).toBeInstanceOf(Address);
-    expect(new Address(undefined, -Infinity).address).toBe(0);
-    expect(new Address(undefined, -Infinity).addressOffset).toBeInstanceOf(
-      Offset,
-    );
-    expect(new Address(undefined, -Infinity).addressOffset.anonymous).toBe(
-      true,
-    );
-    expect(new Address(undefined, -Infinity).addressOffset.name).toBe(
-      '+ 0000ʰ',
-    );
-    expect(new Address(undefined, -Infinity).addressOffset.offset).toBe(0);
-    expect(new Address(undefined, -Infinity).anonymous).toBe(true);
-    expect(new Address(undefined, -Infinity).baseAddress).toBe(0);
-    expect(new Address(undefined, -Infinity).name).toBe('<anonymous 0000ʰ>');
+    const bar = new Address(undefined, Infinity);
+
+    expect(bar).toBeInstanceOf(Address);
+    expect(bar.address).toBe(0);
+    expect(bar.addressOffset).toBeInstanceOf(Offset);
+    expect(bar.addressOffset.anonymous).toBe(true);
+    expect(bar.addressOffset.name).toBe('+ 0000ʰ');
+    expect(bar.addressOffset.offset).toBe(0);
+    expect(bar.anonymous).toBe(true);
+    expect(bar.baseAddress).toBe(0);
+    expect(bar.name).toBe('<anonymous 0000ʰ>');
+
+    const baz = new Address(undefined, -Infinity);
+
+    expect(baz).toBeInstanceOf(Address);
+    expect(baz.address).toBe(0);
+    expect(baz.addressOffset).toBeInstanceOf(Offset);
+    expect(baz.addressOffset.anonymous).toBe(true);
+    expect(baz.addressOffset.name).toBe('+ 0000ʰ');
+    expect(baz.addressOffset.offset).toBe(0);
+    expect(baz.anonymous).toBe(true);
+    expect(baz.baseAddress).toBe(0);
+    expect(baz.name).toBe('<anonymous 0000ʰ>');
   });
 
   test('(string, Address(name))', () => {
-    const bar = new Address('bar', 43);
+    const foo = new Address('foo', new Address('bar', 43));
 
-    expect(new Address('foo', bar)).toBeInstanceOf(Address);
-    expect(new Address('foo', bar).address).toBe(43);
-    expect(new Address('foo', bar).addressOffset).toBeInstanceOf(Offset);
-    expect(new Address('foo', bar).addressOffset.anonymous).toBe(true);
-    expect(new Address('foo', bar).addressOffset.name).toBe('+ 0000ʰ');
-    expect(new Address('foo', bar).addressOffset.offset).toBe(0);
-    expect(new Address('foo', bar).anonymous).toBe(false);
-    expect(new Address('foo', bar).baseAddress).toBe(43);
-    expect(new Address('foo', bar).name).toBe('foo');
+    expect(foo).toBeInstanceOf(Address);
+    expect(foo.address).toBe(43);
+    expect(foo.addressOffset).toBeInstanceOf(Offset);
+    expect(foo.addressOffset.anonymous).toBe(true);
+    expect(foo.addressOffset.name).toBe('+ 0000ʰ');
+    expect(foo.addressOffset.offset).toBe(0);
+    expect(foo.anonymous).toBe(false);
+    expect(foo.baseAddress).toBe(43);
+    expect(foo.name).toBe('foo');
   });
 
   test('(string, Address(undefined))', () => {
-    const bar = new Address(undefined, 43);
+    const foo = new Address('foo', new Address(undefined, 43));
 
-    expect(new Address('foo', bar)).toBeInstanceOf(Address);
-    expect(new Address('foo', bar).address).toBe(43);
-    expect(new Address('foo', bar).addressOffset).toBeInstanceOf(Offset);
-    expect(new Address('foo', bar).addressOffset.anonymous).toBe(true);
-    expect(new Address('foo', bar).addressOffset.name).toBe('+ 0000ʰ');
-    expect(new Address('foo', bar).addressOffset.offset).toBe(0);
-    expect(new Address('foo', bar).anonymous).toBe(false);
-    expect(new Address('foo', bar).baseAddress).toBe(43);
-    expect(new Address('foo', bar).name).toBe('foo');
+    expect(foo).toBeInstanceOf(Address);
+    expect(foo.address).toBe(43);
+    expect(foo.addressOffset).toBeInstanceOf(Offset);
+    expect(foo.addressOffset.anonymous).toBe(true);
+    expect(foo.addressOffset.name).toBe('+ 0000ʰ');
+    expect(foo.addressOffset.offset).toBe(0);
+    expect(foo.anonymous).toBe(false);
+    expect(foo.baseAddress).toBe(43);
+    expect(foo.name).toBe('foo');
   });
 
   test('(undefined, Address(name))', () => {
-    const bar = new Address('bar', 43);
+    const foo = new Address(undefined, new Address('bar', 43));
 
-    expect(new Address(undefined, bar)).toBeInstanceOf(Address);
-    expect(new Address(undefined, bar).address).toBe(43);
-    expect(new Address(undefined, bar).addressOffset).toBeInstanceOf(Offset);
-    expect(new Address(undefined, bar).addressOffset.anonymous).toBe(true);
-    expect(new Address(undefined, bar).addressOffset.name).toBe('+ 0000ʰ');
-    expect(new Address(undefined, bar).addressOffset.offset).toBe(0);
-    expect(new Address(undefined, bar).anonymous).toBe(true);
-    expect(new Address(undefined, bar).baseAddress).toBe(43);
-    expect(new Address(undefined, bar).name).toBe('<anonymous 002Bʰ>');
+    expect(foo).toBeInstanceOf(Address);
+    expect(foo.address).toBe(43);
+    expect(foo.addressOffset).toBeInstanceOf(Offset);
+    expect(foo.addressOffset.anonymous).toBe(true);
+    expect(foo.addressOffset.name).toBe('+ 0000ʰ');
+    expect(foo.addressOffset.offset).toBe(0);
+    expect(foo.anonymous).toBe(true);
+    expect(foo.baseAddress).toBe(43);
+    expect(foo.name).toBe('<anonymous 002Bʰ>');
   });
 
   test('(undefined, Address(undefined))', () => {
-    const bar = new Address(undefined, 43);
+    const foo = new Address(undefined, new Address(undefined, 43));
 
-    expect(new Address(undefined, bar)).toBeInstanceOf(Address);
-    expect(new Address(undefined, bar).address).toBe(43);
-    expect(new Address(undefined, bar).addressOffset).toBeInstanceOf(Offset);
-    expect(new Address(undefined, bar).addressOffset.anonymous).toBe(true);
-    expect(new Address(undefined, bar).addressOffset.name).toBe('+ 0000ʰ');
-    expect(new Address(undefined, bar).addressOffset.offset).toBe(0);
-    expect(new Address(undefined, bar).anonymous).toBe(true);
-    expect(new Address(undefined, bar).baseAddress).toBe(43);
-    expect(new Address(undefined, bar).name).toBe('<anonymous 002Bʰ>');
+    expect(foo).toBeInstanceOf(Address);
+    expect(foo.address).toBe(43);
+    expect(foo.addressOffset).toBeInstanceOf(Offset);
+    expect(foo.addressOffset.anonymous).toBe(true);
+    expect(foo.addressOffset.name).toBe('+ 0000ʰ');
+    expect(foo.addressOffset.offset).toBe(0);
+    expect(foo.anonymous).toBe(true);
+    expect(foo.baseAddress).toBe(43);
+    expect(foo.name).toBe('<anonymous 002Bʰ>');
   });
 
   describe('with offset', () => {
     test('(string, number, number)', () => {
-      expect(new Address('foo', 42, 43)).toBeInstanceOf(Address);
-      expect(new Address('foo', 42, 43).address).toBe(42 + 43);
-      expect(new Address('foo', 42, 43).addressOffset).toBeInstanceOf(Offset);
-      expect(new Address('foo', 42, 43).addressOffset.anonymous).toBe(true);
-      expect(new Address('foo', 42, 43).addressOffset.name).toBe('+ 002Bʰ');
-      expect(new Address('foo', 42, 43).addressOffset.offset).toBe(43);
-      expect(new Address('foo', 42, 43).anonymous).toBe(false);
-      expect(new Address('foo', 42, 43).baseAddress).toBe(42);
-      expect(new Address('foo', 42, 43).name).toBe('foo');
+      const foo = new Address('foo', 42, 43);
 
-      expect(new Address('foo', 42, -43)).toBeInstanceOf(Address);
-      expect(new Address('foo', 42, -43).address).toBe(0xffff);
-      expect(new Address('foo', 42, -43).addressOffset).toBeInstanceOf(Offset);
-      expect(new Address('foo', 42, -43).addressOffset.anonymous).toBe(true);
-      expect(new Address('foo', 42, -43).addressOffset.name).toBe('- 002Bʰ');
-      expect(new Address('foo', 42, -43).addressOffset.offset).toBe(-43);
-      expect(new Address('foo', 42, -43).anonymous).toBe(false);
-      expect(new Address('foo', 42, -43).baseAddress).toBe(42);
-      expect(new Address('foo', 42, -43).name).toBe('foo');
+      expect(foo).toBeInstanceOf(Address);
+      expect(foo.address).toBe(42 + 43);
+      expect(foo.addressOffset).toBeInstanceOf(Offset);
+      expect(foo.addressOffset.anonymous).toBe(true);
+      expect(foo.addressOffset.name).toBe('+ 002Bʰ');
+      expect(foo.addressOffset.offset).toBe(43);
+      expect(foo.anonymous).toBe(false);
+      expect(foo.baseAddress).toBe(42);
+      expect(foo.name).toBe('foo');
+
+      const bar = new Address('foo', 42, -43);
+
+      expect(bar).toBeInstanceOf(Address);
+      expect(bar.address).toBe(0xffff);
+      expect(bar.addressOffset).toBeInstanceOf(Offset);
+      expect(bar.addressOffset.anonymous).toBe(true);
+      expect(bar.addressOffset.name).toBe('- 002Bʰ');
+      expect(bar.addressOffset.offset).toBe(-43);
+      expect(bar.anonymous).toBe(false);
+      expect(bar.baseAddress).toBe(42);
+      expect(bar.name).toBe('foo');
     });
 
     test('(string, number, not number)', () => {
-      expect(new Address('foo', 42, NaN)).toBeInstanceOf(Address);
-      expect(new Address('foo', 42, NaN).address).toBe(42 + 0);
-      expect(new Address('foo', 42, NaN).addressOffset).toBeInstanceOf(Offset);
-      expect(new Address('foo', 42, NaN).addressOffset.anonymous).toBe(true);
-      expect(new Address('foo', 42, NaN).addressOffset.name).toBe('+ 0000ʰ');
-      expect(new Address('foo', 42, NaN).addressOffset.offset).toBe(0);
-      expect(new Address('foo', 42, NaN).anonymous).toBe(false);
-      expect(new Address('foo', 42, NaN).baseAddress).toBe(42);
-      expect(new Address('foo', 42, NaN).name).toBe('foo');
+      const foo = new Address('foo', 42, NaN);
 
-      expect(new Address('foo', 42, Infinity)).toBeInstanceOf(Address);
-      expect(new Address('foo', 42, Infinity).address).toBe(42 + 0);
-      expect(new Address('foo', 42, Infinity).addressOffset).toBeInstanceOf(
-        Offset,
-      );
-      expect(new Address('foo', 42, Infinity).addressOffset.anonymous).toBe(
-        true,
-      );
-      expect(new Address('foo', 42, Infinity).addressOffset.name).toBe(
-        '+ 0000ʰ',
-      );
-      expect(new Address('foo', 42, Infinity).addressOffset.offset).toBe(0);
-      expect(new Address('foo', 42, Infinity).anonymous).toBe(false);
-      expect(new Address('foo', 42, Infinity).baseAddress).toBe(42);
-      expect(new Address('foo', 42, Infinity).name).toBe('foo');
+      expect(foo).toBeInstanceOf(Address);
+      expect(foo.address).toBe(42 + 0);
+      expect(foo.addressOffset).toBeInstanceOf(Offset);
+      expect(foo.addressOffset.anonymous).toBe(true);
+      expect(foo.addressOffset.name).toBe('+ 0000ʰ');
+      expect(foo.addressOffset.offset).toBe(0);
+      expect(foo.anonymous).toBe(false);
+      expect(foo.baseAddress).toBe(42);
+      expect(foo.name).toBe('foo');
 
-      expect(new Address('foo', 42, -Infinity)).toBeInstanceOf(Address);
-      expect(new Address('foo', 42, -Infinity).address).toBe(42 + 0);
-      expect(new Address('foo', 42, -Infinity).addressOffset).toBeInstanceOf(
-        Offset,
-      );
-      expect(new Address('foo', 42, -Infinity).addressOffset.anonymous).toBe(
-        true,
-      );
-      expect(new Address('foo', 42, -Infinity).addressOffset.name).toBe(
-        '+ 0000ʰ',
-      );
-      expect(new Address('foo', 42, -Infinity).addressOffset.offset).toBe(0);
-      expect(new Address('foo', 42, -Infinity).anonymous).toBe(false);
-      expect(new Address('foo', 42, -Infinity).baseAddress).toBe(42);
-      expect(new Address('foo', 42, -Infinity).name).toBe('foo');
+      const bar = new Address('foo', 42, Infinity);
+
+      expect(bar).toBeInstanceOf(Address);
+      expect(bar.address).toBe(42 + 0);
+      expect(bar.addressOffset).toBeInstanceOf(Offset);
+      expect(bar.addressOffset.anonymous).toBe(true);
+      expect(bar.addressOffset.name).toBe('+ 0000ʰ');
+      expect(bar.addressOffset.offset).toBe(0);
+      expect(bar.anonymous).toBe(false);
+      expect(bar.baseAddress).toBe(42);
+      expect(bar.name).toBe('foo');
+
+      const baz = new Address('foo', 42, -Infinity);
+
+      expect(baz).toBeInstanceOf(Address);
+      expect(baz.address).toBe(42 + 0);
+      expect(baz.addressOffset).toBeInstanceOf(Offset);
+      expect(baz.addressOffset.anonymous).toBe(true);
+      expect(baz.addressOffset.name).toBe('+ 0000ʰ');
+      expect(baz.addressOffset.offset).toBe(0);
+      expect(baz.anonymous).toBe(false);
+      expect(baz.baseAddress).toBe(42);
+      expect(baz.name).toBe('foo');
     });
 
     test('(string, number, Offset(name)))', () => {
-      const offset = new Offset('bar', 43);
+      const bar = new Offset('bar', 43);
+      const foo = new Address('foo', 42, bar);
 
-      expect(new Address('foo', 42, offset)).toBeInstanceOf(Address);
-      expect(new Address('foo', 42, offset).address).toBe(42 + 43);
-      expect(new Address('foo', 42, offset).addressOffset).toBeInstanceOf(
-        Offset,
-      );
-      expect(new Address('foo', 42, offset).addressOffset).not.toBe(offset);
-      expect(new Address('foo', 42, offset).addressOffset.anonymous).toBe(
-        false,
-      );
-      expect(new Address('foo', 42, offset).addressOffset.name).toBe('bar');
-      expect(new Address('foo', 42, offset).addressOffset.offset).toBe(43);
-      expect(new Address('foo', 42, offset).anonymous).toBe(false);
-      expect(new Address('foo', 42, offset).baseAddress).toBe(42);
-      expect(new Address('foo', 42, offset).name).toBe('foo');
+      expect(foo).toBeInstanceOf(Address);
+      expect(foo.address).toBe(42 + 43);
+      expect(foo.addressOffset).toBeInstanceOf(Offset);
+      expect(foo.addressOffset).not.toBe(bar);
+      expect(foo.addressOffset.anonymous).toBe(false);
+      expect(foo.addressOffset.name).toBe('bar');
+      expect(foo.addressOffset.offset).toBe(43);
+      expect(foo.anonymous).toBe(false);
+      expect(foo.baseAddress).toBe(42);
+      expect(foo.name).toBe('foo');
     });
 
     test('(string, number, Offset(undefined)))', () => {
-      const offset = new Offset(undefined, 43);
+      const bar = new Offset(undefined, 43);
+      const foo = new Address('foo', 42, bar);
 
-      expect(new Address('foo', 42, offset)).toBeInstanceOf(Address);
-      expect(new Address('foo', 42, offset).address).toBe(42 + 43);
-      expect(new Address('foo', 42, offset).addressOffset).toBeInstanceOf(
-        Offset,
-      );
-      expect(new Address('foo', 42, offset).addressOffset).not.toBe(offset);
-      expect(new Address('foo', 42, offset).addressOffset.anonymous).toBe(true);
-      expect(new Address('foo', 42, offset).addressOffset.name).toBe('+ 002Bʰ');
-      expect(new Address('foo', 42, offset).addressOffset.offset).toBe(43);
-      expect(new Address('foo', 42, offset).anonymous).toBe(false);
-      expect(new Address('foo', 42, offset).baseAddress).toBe(42);
-      expect(new Address('foo', 42, offset).name).toBe('foo');
+      expect(foo).toBeInstanceOf(Address);
+      expect(foo.address).toBe(42 + 43);
+      expect(foo.addressOffset).toBeInstanceOf(Offset);
+      expect(foo.addressOffset).not.toBe(bar);
+      expect(foo.addressOffset.anonymous).toBe(true);
+      expect(foo.addressOffset.name).toBe('+ 002Bʰ');
+      expect(foo.addressOffset.offset).toBe(43);
+      expect(foo.anonymous).toBe(false);
+      expect(foo.baseAddress).toBe(42);
+      expect(foo.name).toBe('foo');
     });
   });
 
   describe('with offseted address', () => {
     test('(string, Address(undefined, number, number))', () => {
-      const bar = new Address(undefined, 43, 44);
+      const foo = new Address('foo', new Address(undefined, 43, 44));
 
-      expect(new Address('foo', bar)).toBeInstanceOf(Address);
-      expect(new Address('foo', bar).address).toBe(43 + 44);
-      expect(new Address('foo', bar).addressOffset).toBeInstanceOf(Offset);
-      expect(new Address('foo', bar).addressOffset.anonymous).toBe(true);
-      expect(new Address('foo', bar).addressOffset.name).toBe('+ 0000ʰ');
-      expect(new Address('foo', bar).addressOffset.offset).toBe(0);
-      expect(new Address('foo', bar).anonymous).toBe(false);
-      expect(new Address('foo', bar).baseAddress).toBe(43 + 44);
-      expect(new Address('foo', bar).name).toBe('foo');
+      expect(foo).toBeInstanceOf(Address);
+      expect(foo.address).toBe(43 + 44);
+      expect(foo.addressOffset).toBeInstanceOf(Offset);
+      expect(foo.addressOffset.anonymous).toBe(true);
+      expect(foo.addressOffset.name).toBe('+ 0000ʰ');
+      expect(foo.addressOffset.offset).toBe(0);
+      expect(foo.anonymous).toBe(false);
+      expect(foo.baseAddress).toBe(43 + 44);
+      expect(foo.name).toBe('foo');
     });
   });
 });
@@ -404,13 +406,9 @@ test('of', () => {
 });
 
 test('createDict', () => {
-  expect(Address.createDict({ FOO: 0, BAR: 2, BAZ: 4 })).toEqual(
-    utils.createAddressMap({ FOO: 0, BAR: 2, BAZ: 4 }),
-  );
+  expect(() => Address.createDict({ FOO: 0, BAR: 2, BAZ: 4 })).toThrow();
 });
 
 test('createWork', () => {
-  expect(Address.createWork(42, { FOO: 1, BAR: 2, BAZ: 2 })).toEqual(
-    utils.createAddressWorkMap(42, { FOO: 1, BAR: 2, BAZ: 2 }),
-  );
+  expect(() => Address.createWork(42, { FOO: 1, BAR: 2, BAZ: 2 })).toThrow();
 });

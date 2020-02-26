@@ -1,7 +1,6 @@
 import { formatters } from './formatters';
 import { Work } from './Work';
 import { OffsetData, Offset } from './Offset';
-import { utils } from './utils';
 
 /** Object interface for named address. */
 export type AddressData = {
@@ -120,13 +119,11 @@ export class Address implements AddressData {
    * @deprecated use utils.createAddressMap
    */
   public static createDict<T extends { [key: string]: AddressData | number }>(
-    values: T,
+    _values: T,
   ): { [P in keyof T]: Address } {
-    console.warn(
+    throw Error(
       'Address.createDict is deperecated. use utils.createAddressMap.',
     );
-
-    return utils.createAddressMap(values);
   }
 
   /**
@@ -142,13 +139,11 @@ export class Address implements AddressData {
    * @deprecated use utils.createAddressWorkMap
    */
   public static createWork<T extends { [key: string]: number }>(
-    start: number | AddressData,
-    values: T,
+    _start: number | AddressData,
+    _values: T,
   ): { [P in keyof T]: Address } & Work<Address> {
-    console.warn(
+    throw Error(
       'Address.createWork is deperecated. use utils.createAddressWorkMap.',
     );
-
-    return utils.createAddressWorkMap(start, values);
   }
 }

@@ -1,6 +1,6 @@
 # mem-tools
 
-Tools for retro computer programing.
+Tools for simulate retro computer programing with TypeScript.
 
 ## Memory
 
@@ -11,35 +11,37 @@ Tools for retro computer programing.
 
 - Listeners can receive events on memory operations.
 
-## Address
+## Address & Offset & utils
 
 - Useful class & utility for named addresses.
 - Can be used like assembler's labels.
 
 ```typescript
 const FOO = new Address('FOO', 0x1234);
+const BAR = new Offset('BAR', 0x12);
 
 mem.readInt8(FOO); // read from 0x1234
-mem.readInt8(FOO.offset(-2)); // read from 0x1234 - 2 = 0x1232
+mem.readInt8(FOO.offset(-0x12)); // read from 0x1234 - 0x12 = 0x1222
+mem.readInt8(FOO.offset(BAR)); // read from 0x1234 + 0x12 = 0x1246
 
-const DICT = Address.createDicr({
+const MAP = utils.createAddressMap({
   BAR: 0x2345,
   BAZ: 0x3456,
 });
 
-mem.readInt8(DICT.BAR); // read from 0x2345
-mem.readInt8(DICT.BAZ); // read from 0x3456
+mem.readInt8(MAP.BAR); // read from 0x2345
+mem.readInt8(MAP.BAZ); // read from 0x3456
 
-const WORK = Address.createWork(0xcb00, [
+const WORK_MAP = utils.createAddressWorkMap(0xcb00, [
   ['QUX', 2],
   ['QUUX', 1],
   ['QUUUX', 1],
 ]);
 
-mem.writeInt16(0x1234, WORK.QUX); // write to 0xcb00
-mem.writeInt8(0x56, WORK.QUUX); // write to 0xcb02
-mem.writeInt8(0x78, WORK.QUUUX); // write to 0xcb03
-mem.fill(0, WORK.__FIRST__, WORK.__LAST__); // fill 0xcb00 - 0xcb03
+mem.writeInt16(0x1234, WORK_MAP.QUX); // write to 0xcb00
+mem.writeInt8(0x56, WORK_MAP.QUUX); // write to 0xcb02
+mem.writeInt8(0x78, WORK_MAP.QUUUX); // write to 0xcb03
+mem.fill(0, WORK_MAP.__FIRST__, WORK_MAP.__LAST__); // fill 0xcb00 - 0xcb03
 ```
 
 ## formatters

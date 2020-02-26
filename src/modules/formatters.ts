@@ -24,21 +24,6 @@ const decOptions: FormatterOptions = {
   padding: ' ',
 };
 
-const modulo = (a: number, b: number): number => {
-  if (!Number.isFinite(a) || !Number.isFinite(b)) return NaN;
-
-  const c: number = a;
-  const d: number = b;
-
-  if (d === 0) return NaN;
-
-  if (c === 0 || c === d || -c === d) return 0;
-
-  if ((c > 0 && d > 0) || (c < 0 && d < 0)) return c % d;
-
-  return (c % d) + d;
-};
-
 const changeCase = (value: string, upperCase: boolean): string =>
   upperCase ? value.toUpperCase() : value.toLowerCase();
 
@@ -52,12 +37,11 @@ const format = (
   const size = max.toString(base).length;
 
   return `${options.prefix}${changeCase(
-    (byteSize < 4 ? value & max : modulo(value, max + 1))
-      .toString(base)
-      .padStart(size, options.padding)
-      .slice(-size),
+    (value & max).toString(base),
     options.upperCase,
-  )}${options.postfix}`;
+  )
+    .padStart(size, options.padding)
+    .slice(-size)}${options.postfix}`;
 };
 
 /** Number formatters for 8bit/16bit decimal/dexadecimal. */

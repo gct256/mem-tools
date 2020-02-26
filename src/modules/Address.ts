@@ -55,7 +55,7 @@ export class Address implements AddressData {
     this.address = (this.baseAddress + this.addressOffset.offset) & 0xffff;
 
     if (name === undefined) {
-      this.name = `<anonymous ${formatters.hex16(this.address)}>`;
+      this.name = `<anonymous ${formatters.hex16(this.baseAddress)}>`;
       this.anonymous = true;
     } else {
       this.name = name;
@@ -95,14 +95,6 @@ export class Address implements AddressData {
   public offset(addressOffset: number | Offset): Address {
     if (typeof addressOffset === 'number') {
       return this.offset(new Offset(undefined, addressOffset));
-    }
-
-    if (
-      addressOffset.offset === this.addressOffset.offset &&
-      addressOffset.name === this.addressOffset.name &&
-      addressOffset.anonymous === this.addressOffset.anonymous
-    ) {
-      return this;
     }
 
     return new Address(this.name, this.baseAddress, addressOffset);

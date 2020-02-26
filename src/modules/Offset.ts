@@ -33,14 +33,16 @@ export class Offset implements OffsetData {
    * @param offset
    */
   public constructor(name: string | undefined, offset: number) {
+    const o = Number.isFinite(offset) ? +offset : 0;
+
     if (name === undefined) {
       this.anonymous = true;
-      this.name = `${format(offset)}`;
+      this.name = `${format(o)}`;
     } else {
       this.anonymous = false;
       this.name = name;
     }
-    this.offset = offset;
+    this.offset = o;
   }
 
   /**

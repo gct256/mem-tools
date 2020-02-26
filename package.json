@@ -6,20 +6,30 @@
     "watch": "rollup -c -w",
     "prebuild": "rimraf types lib",
     "build": "NODE_ENV=production rollup -c",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "test": "jest"
   },
   "main": "./lib",
   "typings": "./types/index.d.ts",
   "devDependencies": {
+    "@babel/core": "^7.8.4",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/plugin-syntax-class-properties": "^7.8.3",
+    "@babel/preset-env": "^7.8.4",
+    "@babel/preset-typescript": "^7.8.3",
+    "@types/jest": "^25.1.2",
     "@types/node": "^13.5.0",
     "@typescript-eslint/eslint-plugin": "^2.18.0",
     "@typescript-eslint/parser": "^2.18.0",
+    "babel-jest": "^25.1.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-jest": "^23.7.0",
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-promise": "^4.2.1",
+    "jest": "^25.1.0",
     "prettier": "^1.19.1",
     "rimraf": "^3.0.1",
     "rollup": "^1.30.1",
@@ -43,5 +53,8 @@
   "optionalDependencies": {
     "@gct256/hexdump": "^0.1.1",
     "chalk": "^3.0.0"
+  },
+  "jest": {
+    "testRegex": "/__tests__/(.*/)?test_.*\\.(tsx?|jsx?)$"
   }
 }

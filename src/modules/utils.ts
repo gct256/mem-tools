@@ -1,5 +1,5 @@
 import { AddressData, Address } from './Address';
-import { Work, createWork } from './Work';
+import { Work, createWork, isWorkLabel } from './Work';
 import { OffsetData, Offset } from './Offset';
 
 type KeyDiff<X, Y> = X extends Y ? never : X;
@@ -75,7 +75,7 @@ export const utils = {
    *
    * @param values key and value.
    */
-  createOffsetMap<T extends { [key: string]: number }>(
+  createOffsetMap<T extends { [key: string]: OffsetData | number }>(
     values: T,
   ): { [P in keyof T]: Offset } {
     const keys = Object.keys(values) as (keyof T)[];
@@ -109,10 +109,13 @@ export const utils = {
     const keys = Object.keys(values) as (keyof T)[];
     const result: { [P in keyof T]: Offset } = Object.create(null);
 
+    let size = 0;
+
     keys.forEach((k) => {
       result[k] = new Offset(k as string, offset);
       before = offset;
       offset += values[k] as number;
+      size += values[k] as number;
     });
 
     return {
@@ -121,7 +124,7 @@ export const utils = {
         (x) => new Offset(x, 0),
         (x) => new Offset(x, before),
         (x) => new Offset(x, offset),
-        keys.length,
+        size,
       ),
     };
   },
@@ -141,7 +144,11 @@ export const utils = {
     const keys = Object.keys(map) as (keyof T)[];
 
     keys.forEach((key) => {
-      result[key] = base.offset(map[key]);
+      const k = `${key}`;
+
+      if (!isWorkLabel(k)) {
+        result[key] = base.offset(new Offset(k, map[key].offset));
+      }
     });
 
     return { ...result };

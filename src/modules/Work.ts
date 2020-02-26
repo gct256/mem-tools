@@ -1,4 +1,4 @@
-enum WorkLabel {
+export enum WorkLabel {
   __FIRST__ = '__FIRST__',
   __LAST__ = '__LAST__',
   __NEXT__ = '__NEXT__',
@@ -27,3 +27,19 @@ export const createWork = <T>(
   [WorkLabel.__NEXT__]: next(WorkLabel.__NEXT__),
   [WorkLabel.__SIZE__]: size,
 });
+
+export const isWorkLabel = (key: string): boolean => {
+  switch (key) {
+    case WorkLabel.__FIRST__: // fall through
+
+    case WorkLabel.__LAST__: // fall through
+
+    case WorkLabel.__NEXT__: // fall through
+
+    case WorkLabel.__SIZE__: // fall through
+      return true;
+
+    default:
+      return false;
+  }
+};

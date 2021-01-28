@@ -1,6 +1,6 @@
 {
   "name": "@gct256/mem-tools",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "license": "MIT",
   "scripts": {
     "watch": "rollup -c -w",

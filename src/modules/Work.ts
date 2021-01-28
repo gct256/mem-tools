@@ -1,19 +1,21 @@
-export enum WorkLabel {
-  __FIRST__ = '__FIRST__',
-  __LAST__ = '__LAST__',
-  __NEXT__ = '__NEXT__',
-  __SIZE__ = '__SIZE__',
-}
+export const WORK_LABELS = {
+  __FIRST__: '__FIRST__',
+  __LAST__: '__LAST__',
+  __NEXT__: '__NEXT__',
+  __SIZE__: '__SIZE__',
+} as const;
+
+export type WorkLabel = typeof WORK_LABELS[keyof typeof WORK_LABELS];
 
 export type Work<T> = {
   /** First of work area. */
-  [WorkLabel.__FIRST__]: T;
+  [WORK_LABELS.__FIRST__]: T;
   /** Last of work area. */
-  [WorkLabel.__LAST__]: T;
+  [WORK_LABELS.__LAST__]: T;
   /** Next of work area. */
-  [WorkLabel.__NEXT__]: T;
+  [WORK_LABELS.__NEXT__]: T;
   /** Size of work area. */
-  [WorkLabel.__SIZE__]: number;
+  [WORK_LABELS.__SIZE__]: number;
 };
 
 export const createWork = <T>(
@@ -22,21 +24,21 @@ export const createWork = <T>(
   next: (name: string) => T,
   size: number,
 ): Work<T> => ({
-  [WorkLabel.__FIRST__]: first(WorkLabel.__FIRST__),
-  [WorkLabel.__LAST__]: last(WorkLabel.__LAST__),
-  [WorkLabel.__NEXT__]: next(WorkLabel.__NEXT__),
-  [WorkLabel.__SIZE__]: size,
+  [WORK_LABELS.__FIRST__]: first(WORK_LABELS.__FIRST__),
+  [WORK_LABELS.__LAST__]: last(WORK_LABELS.__LAST__),
+  [WORK_LABELS.__NEXT__]: next(WORK_LABELS.__NEXT__),
+  [WORK_LABELS.__SIZE__]: size,
 });
 
 export const isWorkLabel = (key: string): boolean => {
   switch (key) {
-    case WorkLabel.__FIRST__: // fall through
+    case WORK_LABELS.__FIRST__: // fall through
 
-    case WorkLabel.__LAST__: // fall through
+    case WORK_LABELS.__LAST__: // fall through
 
-    case WorkLabel.__NEXT__: // fall through
+    case WORK_LABELS.__NEXT__: // fall through
 
-    case WorkLabel.__SIZE__: // fall through
+    case WORK_LABELS.__SIZE__: // fall through
       return true;
 
     default:

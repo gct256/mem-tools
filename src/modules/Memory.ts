@@ -1,5 +1,5 @@
-import { Emitter } from './Emitter';
 import { Address } from './Address';
+import { Emitter } from './Emitter';
 
 const getAddress = (address: Address | number): Address =>
   address instanceof Address ? address : new Address(undefined, address);
@@ -61,9 +61,12 @@ export class Memory extends Emitter {
       if (
         data instanceof Uint8Array ||
         data instanceof Uint8ClampedArray ||
-        data instanceof Int8Array ||
-        Array.isArray(data)
+        data instanceof Int8Array
       ) {
+        return Memory.from(Buffer.from(data));
+      }
+
+      if (Array.isArray(data)) {
         return Memory.from(Buffer.from(data));
       }
     } catch {

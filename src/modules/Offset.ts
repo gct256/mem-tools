@@ -1,5 +1,5 @@
-import { Work } from './Work';
 import { formatters } from './formatters';
+import { Work } from './Work';
 
 const format = (offset: number, delimiter = ' '): string => {
   if (offset < 0) {

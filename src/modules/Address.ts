@@ -1,6 +1,6 @@
 import { formatters } from './formatters';
-import { Work } from './Work';
 import { OffsetData, Offset } from './Offset';
+import { Work } from './Work';
 
 /** Object interface for named address. */
 export type AddressData = {

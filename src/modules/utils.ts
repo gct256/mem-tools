@@ -1,9 +1,9 @@
 import { AddressData, Address } from './Address';
-import { Work, createWork, isWorkLabel } from './Work';
 import { OffsetData, Offset } from './Offset';
+import { Work, createWork, isWorkLabel } from './Work';
 
 type KeyDiff<X, Y> = X extends Y ? never : X;
-type Diff<X, Y extends object> = Pick<X, KeyDiff<keyof X, keyof Y>>;
+type Diff<X, Y> = Pick<X, KeyDiff<keyof X, keyof Y>>;
 
 export const utils = {
   /**

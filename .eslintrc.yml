@@ -6,7 +6,7 @@ extends:
   - airbnb-base
   - plugin:promise/recommended
   - plugin:@typescript-eslint/recommended
-  - plugin:prettier/recommended
+  - prettier
   - prettier/@typescript-eslint
 
 parser: '@typescript-eslint/parser'
@@ -26,33 +26,16 @@ settings:
         - .ts
         - .js
 
+plugins:
+  - '@typescript-eslint'
+
 rules:
-  # consoleは限定
+  # use only console.debug, console.warn, console.error
   no-console:
     - error
     - allow: [debug, warn, error]
 
-  # case の break 省略はエラー / fall through コメントで抑制
-  no-fallthrough:
-    - error
-
-  # default export は使わない
-  import/prefer-default-export:
-    - off
-  import/no-default-export:
-    - error
-
-  # importの順
-  import/order:
-    - error
-    - newlines-between: always
-
-  # interface 継承時は空でもよい
-  '@typescript-eslint/no-empty-interface':
-    - error
-    - allowSingleExtends: true
-
-  # 適当に空行が入るようにする
+  # line spacing
   padding-line-between-statements:
     - error
     - { blankLine: always, prev: '*', next: return }
@@ -61,38 +44,65 @@ rules:
     - { blankLine: always, prev: '*', next: const }
     - { blankLine: always, prev: const, next: '*' }
     - { blankLine: any, prev: const, next: const }
-    - { blankLine: always, prev: case, next: '*' }
-
-  # 適当に空行が入るようにする
+    - { blankLine: always, prev: '*', next: default }
   lines-between-class-members:
     - error
     - always
     - exceptAfterSingleLine: true
 
-  # 戻り値の型は常に必要
-  '@typescript-eslint/explicit-function-return-type':
-    - error
-    - allowExpressions: true # 引数のコールバックなどは省略可
-
-  # 関数はconstで定義する
+  # function style
   func-style:
     - error
     - expression
 
-  # 先頭が_の変数は使ってなくても良い
-  '@typescript-eslint/no-unused-vars':
-    - error
-    - argsIgnorePattern: '^_'
-
-  # 引数のプロパティを操作してもよい変数名を指定
+  # allow props reassign by variable name
   no-param-reassign:
     - error
     - props: true
       ignorePropertyModificationsFor: []
 
+  # import extension
   import/extensions:
     - error
     - never
+
+  # avoid default export
+  import/prefer-default-export:
+    - off
+  import/no-default-export:
+    - error
+
+  # import order formatting
+  import/order:
+    - error
+    - newlines-between: always
+      alphabetize:
+        order: asc
+        caseInsensitive: true
+
+  # required return type
+  '@typescript-eslint/explicit-module-boundary-types':
+    - error
+
+  '@typescript-eslint/explicit-function-return-type':
+    - error
+    - allowExpressions: true
+
+  # use "_" prefix for unused variable
+  '@typescript-eslint/no-unused-vars':
+    - error
+    - argsIgnorePattern: '^_'
+
+  # overwrite no-use-before-define
+  no-use-before-define:
+    - off
+  '@typescript-eslint/no-use-before-define':
+    - error
+    - functions: true
+      classes: true
+      variables: true
+      enums: true
+      typedefs: true
 
   no-bitwise:
     - off

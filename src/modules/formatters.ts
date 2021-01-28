@@ -52,7 +52,7 @@ export const formatters = {
    * @param value
    * @param options
    */
-  dec8(value: number, options: Partial<FormatterOptions> = {}) {
+  dec8(value: number, options: Partial<FormatterOptions> = {}): string {
     return format(10, value, 1, { ...decOptions, ...options });
   },
 
@@ -62,7 +62,7 @@ export const formatters = {
    * @param value
    * @param options
    */
-  dec16(value: number, options: Partial<FormatterOptions> = {}) {
+  dec16(value: number, options: Partial<FormatterOptions> = {}): string {
     return format(10, value, 2, { ...decOptions, ...options });
   },
 
@@ -72,7 +72,7 @@ export const formatters = {
    * @param value
    * @param options
    */
-  hex8(value: number, options: Partial<FormatterOptions> = {}) {
+  hex8(value: number, options: Partial<FormatterOptions> = {}): string {
     return format(16, value, 1, { ...hexOptions, ...options });
   },
 
@@ -82,7 +82,7 @@ export const formatters = {
    * @param value
    * @param options
    */
-  hex16(value: number, options: Partial<FormatterOptions> = {}) {
+  hex16(value: number, options: Partial<FormatterOptions> = {}): string {
     return format(16, value, 2, { ...hexOptions, ...options });
   },
 };
